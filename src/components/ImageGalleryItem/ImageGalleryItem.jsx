@@ -1,10 +1,12 @@
 import './imageGalleryItem.css';
 
-const ImageGalleryItem = ({ src }) => {
+const ImageGalleryItem = ({ src, toggleModalHandler }) => {
   return (
-    <li className="imageGalleryItem">
-      <img src={src} alt="" className="imageGalleryItem-image " />
-    </li>
+    <>
+      <li className="imageGalleryItem" onClick={toggleModalHandler}>
+        <img src={src} alt="" className="imageGalleryItem-image " />
+      </li>
+    </>
   );
 };
 
