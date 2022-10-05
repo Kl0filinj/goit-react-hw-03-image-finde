@@ -15,39 +15,41 @@ export class App extends Component {
     error: null,
   };
 
-  componentDidUpdate(prevProps, prevState) {
+  async componentDidUpdate(prevProps, prevState) {
     if (prevState.serchReqest !== this.state.serchReqest) {
-      this.setState({ status: 'pending', page: 1, imagesList: [] });
-      getImages(this.state.serchReqest, this.state.page, this.setError)
-        .then(images => {
-          return this.setState({
-            imagesList: images.hits,
-            status: 'completed',
-          });
-        })
-        .catch(error => {
-          this.setState({ error, status: 'rejected' });
+      try {
+        console.log('from INITIAL');
+        this.setState({ status: 'pending' });
+        const images = await getImages(this.state.serchReqest, this.state.page);
+        this.setState({
+          imagesList: images.hits,
+          status: 'completed',
         });
+      } catch (error) {
+        this.setState({ error, status: 'rejected' });
+        console.log('у вас Ошибка => ', error);
+      }
     }
     if (prevState.page !== this.state.page && this.state.page !== 1) {
-      this.setState({ status: 'pending' });
+      try {
+        console.log('from LOADMORE');
+        this.setState({ status: 'pending' });
 
-      getImages(this.state.serchReqest, this.state.page)
-        .then(images => {
-          return this.setState(prState => ({
-            imagesList: [...prState.imagesList, ...images.hits],
-            status: 'completed',
-          }));
-        })
-        .catch(error => {
-          console.log('у вас Ошибка => ', error);
-          this.setState({ error, status: 'rejected' });
-        });
+        const images = await getImages(this.state.serchReqest, this.state.page);
+        console.log(images);
+        this.setState(prState => ({
+          imagesList: [...prState.imagesList, ...images.hits],
+          status: 'completed',
+        }));
+      } catch (error) {
+        console.log('у вас Ошибка => ', error);
+        this.setState({ error, status: 'rejected' });
+      }
     }
   }
 
   onSubmit = req => {
-    this.setState({ serchReqest: req });
+    this.setState({ serchReqest: req, page: 1, imagesList: [] });
   };
 
   loadMoreBtnHandler = () => {
