@@ -10,13 +10,3 @@
   margin-left: auto;
   margin-right: auto;
 }
-
-.temporaty-heading {
-  text-align: center;
-}
-
-.loaderPlaceholder {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}

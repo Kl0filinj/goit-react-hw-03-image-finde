@@ -40,6 +40,9 @@ img {
  * Стили компонента Searchbar
  */
 
+.temporaty-heading {
+  text-align: center;
+}
 /*
  * Стили компонента SearchForm
  */
