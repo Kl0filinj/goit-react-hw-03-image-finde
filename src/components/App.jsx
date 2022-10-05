@@ -12,23 +12,20 @@ export class App extends Component {
     status: 'idle',
     imagesList: [],
     page: 1,
-    modal: false,
     error: null,
   };
 
   componentDidUpdate(prevProps, prevState) {
     if (prevState.serchReqest !== this.state.serchReqest) {
       this.setState({ status: 'pending', page: 1, imagesList: [] });
-      getImages(this.state.serchReqest, this.state.page)
+      getImages(this.state.serchReqest, this.state.page, this.setError)
         .then(images => {
-          console.log('From Initial fetch', prevState.imagesList);
           return this.setState({
             imagesList: images.hits,
             status: 'completed',
           });
         })
         .catch(error => {
-          console.log('у вас Ошибка => ', error);
           this.setState({ error, status: 'rejected' });
         });
     }
@@ -37,8 +34,6 @@ export class App extends Component {
 
       getImages(this.state.serchReqest, this.state.page)
         .then(images => {
-          console.log(prevState.imagesList);
-          console.log(images.hits);
           return this.setState(prState => ({
             imagesList: [...prState.imagesList, ...images.hits],
             status: 'completed',
@@ -58,10 +53,6 @@ export class App extends Component {
   loadMoreBtnHandler = () => {
     this.setState(prState => ({ page: prState.page + 1 }));
   };
-
-  // toggleModalHandler = () => {
-  //   this.setState({ modal: !this.state.modal });
-  // };
 
   render() {
     const { status, imagesList, error } = this.state;

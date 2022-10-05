@@ -14,7 +14,6 @@ export default async function getImages(query, page) {
     );
   } catch (error) {
     console.log(error);
-
     return error;
   }
 }

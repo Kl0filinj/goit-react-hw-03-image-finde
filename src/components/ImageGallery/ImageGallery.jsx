@@ -4,90 +4,18 @@ import ImageGalleryItem from '../ImageGalleryItem';
 import './imageGallery.css';
 
 export default class ImageGallery extends Component {
-  // state = {
-  //   status: 'idle',
-  //   imagesList: [],
-  //   page: 1,
-  //   modal: false,
-  //   error: null,
-  // };
-
-  // componentDidUpdate(prevProps, prevState) {
-  //   if (prevProps.serchReqest !== this.props.serchReqest) {
-  //     this.setState({ status: 'pending', page: 1, imagesList: [] });
-  //     getImages(this.props.serchReqest, this.state.page)
-  //       .then(images => {
-  //         console.log('From Initial fetch', prevState.imagesList);
-  //         return this.setState({
-  //           imagesList: images.hits,
-  //           status: 'completed',
-  //         });
-  //       })
-  //       .catch(error => {
-  //         console.log('у вас Ошибка => ', error);
-  //         this.setState({ error, status: 'rejected' });
-  //       });
-  //   }
-  //   if (prevState.page !== this.state.page && this.state.page !== 1) {
-  //     this.setState({ status: 'pending' });
-
-  //     getImages(this.props.serchReqest, this.state.page)
-  //       .then(images => {
-  //         console.log(prevState.imagesList);
-  //         console.log(images.hits);
-  //         return this.setState(prState => ({
-  //           imagesList: [...prState.imagesList, ...images.hits],
-  //           status: 'completed',
-  //         }));
-  //       })
-  //       .catch(error => {
-  //         console.log('у вас Ошибка => ', error);
-  //         this.setState({ error, status: 'rejected' });
-  //       });
-  //   }
-  // }
-
-  // loadMoreBtnHandler = () => {
-  //   this.setState(prState => ({ page: prState.page + 1 }));
-  // };
-
-  // toggleModalHandler = () => {
-  //   this.setState({ modal: !this.state.modal });
-  // };
   render() {
     const { images } = this.props;
     return (
-      <>
-        <ul className="imageGallery">
-          {images.map(({ webformatURL, id }) => (
-            <ImageGalleryItem
-              src={webformatURL}
-              key={id}
-              // toggleModalHandler={this.toggleModalHandler}
-            ></ImageGalleryItem>
-          ))}
-        </ul>
-
-        {/* {status === 'pending' && (
-          <div className="loaderPlaceholder">
-            <MagnifyingGlass
-              visible={true}
-              height="150"
-              width="150"
-              ariaLabel="MagnifyingGlass-loading"
-              wrapperStyle={{}}
-              wrapperClass="MagnifyingGlass-wrapper"
-              glassColor="#c0efff"
-              color="#e15b64"
-            />
-          </div>
-        )}
-        {imagesList.length > 0 && status === 'completed' && (
-          <LoadMoreBtn onClickHandler={this.loadMoreBtnHandler} />
-        )} */}
-
-        {/* )} */}
-      </>
+      <ul className="imageGallery">
+        {images.map(({ webformatURL, id, largeImageURL }) => (
+          <ImageGalleryItem
+            src={webformatURL}
+            key={id}
+            largeImage={largeImageURL}
+          ></ImageGalleryItem>
+        ))}
+      </ul>
     );
   }
 }

@@ -2,11 +2,30 @@ import React, { Component } from 'react';
 import './modal.css';
 
 export default class Modal extends Component {
+  componentDidMount() {
+    window.addEventListener('keydown', this.closeModalHandler);
+    document.body.style.overflow = 'hidden';
+  }
+  componentWillUnmount() {
+    window.removeEventListener('keydown', this.closeModalHandler);
+    document.body.style.overflow = 'visible';
+  }
+
+  closeModalHandler = evt => {
+    if (evt.code === 'Escape') {
+      this.props.closeModal();
+    }
+    if (evt.target === evt.currentTarget) {
+      this.props.closeModal();
+    }
+  };
+
   render() {
+    const { image } = this.props;
     return (
-      <div className="overlay">
+      <div className="overlay" onClick={this.closeModalHandler}>
         <div className="modal">
-          <img src="" alt="" />
+          <img src={image} alt="" />
         </div>
       </div>
     );
