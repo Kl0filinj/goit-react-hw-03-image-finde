@@ -1,24 +1,27 @@
-import React, { Component } from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
 import ImageGalleryItem from '../ImageGalleryItem';
-
 import './imageGallery.css';
 
-export default class ImageGallery extends Component {
-  render() {
-    const { images } = this.props;
-    return (
-      <ul className="imageGallery">
-        {images.map(({ webformatURL, id, largeImageURL }) => (
-          <ImageGalleryItem
-            src={webformatURL}
-            key={id}
-            largeImage={largeImageURL}
-          ></ImageGalleryItem>
-        ))}
-      </ul>
-    );
-  }
-}
+const ImageGallery = ({ images }) => {
+  return (
+    <ul className="imageGallery">
+      {images.map(({ webformatURL, id, largeImageURL }) => (
+        <ImageGalleryItem
+          src={webformatURL}
+          key={id}
+          largeImage={largeImageURL}
+        ></ImageGalleryItem>
+      ))}
+    </ul>
+  );
+};
+
+ImageGallery.propTypes = {
+  images: PropTypes.arrayOf(PropTypes.object.isRequired),
+};
+
+export default ImageGallery;
 
 // if (status === 'idle') {
 //   return <h1 className="temporaty-heading">Enter your request ⬆️</h1>;

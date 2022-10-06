@@ -7,8 +7,6 @@ import getImages from './services/api';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
-import '../styles.css';
-
 export class App extends Component {
   state = {
     serchReqest: '',
@@ -46,7 +44,6 @@ export class App extends Component {
 
       try {
         const images = await getImages(this.state.serchReqest, this.state.page);
-        console.log(images);
 
         this.setState(prState => ({
           imagesList: [...prState.imagesList, ...images.hits],
@@ -55,9 +52,6 @@ export class App extends Component {
       } catch (error) {
         console.log('у вас Ошибка => ', error);
         this.setState({ error, status: 'rejected' });
-      }
-      if (this.state.totalHits === this.state.imagesList.length) {
-        console.log('End of the list');
       }
     }
   }
@@ -80,14 +74,23 @@ export class App extends Component {
         )}
 
         {status === 'error' && toast.error(`${error}`)}
-        {status === 'empty' &&
-          imagesList.length === 0 &&
-          toast.info(`No results by request "${serchReqest}" 😢`)}
-        <ImageGallery serchReqest={serchReqest} images={imagesList} />
-        {status === 'pending' && <Loader />}
-        {imagesList.length > 0 && totalHits !== imagesList.length && (
-          <LoadMoreBtn onClickHandler={this.loadMoreBtnHandler} />
+
+        {status === 'empty' && (
+          <h1 className="temporaty-heading">
+            `No results by request "${serchReqest}" 😢`
+          </h1>
         )}
+
+        <ImageGallery images={imagesList} />
+
+        {status === 'pending' && <Loader />}
+
+        {imagesList.length > 0 &&
+          totalHits !== imagesList.length &&
+          status !== 'pending' && (
+            <LoadMoreBtn onClickHandler={this.loadMoreBtnHandler} />
+          )}
+
         {totalHits === imagesList.length &&
           toast.error('Sorry, there are no more photos :(')}
         <ToastContainer theme="colored" />
