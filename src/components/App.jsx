@@ -57,6 +57,9 @@ export class App extends Component {
   }
 
   onSubmit = req => {
+    if (req === this.state.serchReqest) {
+      return toast.error('Enter new request ^_^');
+    }
     this.setState({ serchReqest: req, page: 1, imagesList: [] });
   };
 
@@ -66,6 +69,13 @@ export class App extends Component {
 
   render() {
     const { status, imagesList, error, serchReqest, totalHits } = this.state;
+    if (totalHits === imagesList.length) {
+      toast.error('Sorry, there are no more photos :(');
+    }
+    if (status === 'error') {
+      toast.error(`${error}`);
+    }
+
     return (
       <div className="app">
         <Searchbar onSubmit={this.onSubmit} />
@@ -73,11 +83,9 @@ export class App extends Component {
           <h1 className="temporaty-heading">Enter your request ⬆️</h1>
         )}
 
-        {status === 'error' && toast.error(`${error}`)}
-
         {status === 'empty' && (
           <h1 className="temporaty-heading">
-            `No results by request "${serchReqest}" 😢`
+            No results by request "{serchReqest}" 😢
           </h1>
         )}
 
@@ -91,8 +99,6 @@ export class App extends Component {
             <LoadMoreBtn onClickHandler={this.loadMoreBtnHandler} />
           )}
 
-        {totalHits === imagesList.length &&
-          toast.error('Sorry, there are no more photos :(')}
         <ToastContainer theme="colored" />
       </div>
     );
