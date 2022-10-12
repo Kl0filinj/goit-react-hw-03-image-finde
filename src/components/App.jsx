@@ -53,37 +53,40 @@ export const App = () => {
   //     }
   //   }
   // }
-  const fetchData = async () => {
-    return await getImages(serchReqest, page);
-  };
 
   useEffect(() => {
     if (status === 'idle') {
       return;
     }
-
-    fetchData()
-      .then(images => {
-        if (images.hits.length === 0) {
-          setStatus('empty');
-        } else {
-          setImagesList(images.hits);
-          setStatus('completed');
-          setTotalHits(images.totalHits);
-        }
-      })
-      .catch(error => {
-        setError(error);
-        setStatus('rejected');
-        console.log('у вас Ошибка => ', error);
-      });
-  }, [serchReqest]);
+    const fetchData = async () => {
+      return await getImages(serchReqest, page);
+    };
+    if (page === 1) {
+      fetchData()
+        .then(images => {
+          if (images.hits.length === 0) {
+            setStatus('empty');
+          } else {
+            setImagesList(images.hits);
+            setStatus('completed');
+            setTotalHits(images.totalHits);
+          }
+        })
+        .catch(error => {
+          setError(error);
+          setStatus('rejected');
+          console.log('у вас Ошибка => ', error);
+        });
+    }
+  }, [serchReqest, page, status]);
 
   useEffect(() => {
     if (status === 'idle') {
       return;
     }
-
+    const fetchData = async () => {
+      return await getImages(serchReqest, page);
+    };
     if (page !== 1) {
       fetchData()
         .then(images => {
@@ -96,7 +99,7 @@ export const App = () => {
           console.log('у вас Ошибка => ', error);
         });
     }
-  }, [page]);
+  }, [page, serchReqest, status]);
 
   const onSubmit = req => {
     if (req === serchReqest) {
@@ -130,11 +133,6 @@ export const App = () => {
       {status === 'empty' && (
         <h1 className="temporaty-heading">
           No results by request "{serchReqest}" 😢
-        </h1>
-      )}
-      {status === 'error' && (
-        <h1 className="temporaty-heading">
-          Reload the page ^_^ Error: {error}
         </h1>
       )}
 
