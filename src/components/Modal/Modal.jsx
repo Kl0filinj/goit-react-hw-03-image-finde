@@ -1,24 +1,29 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useCallback } from 'react';
 import PropTypes from 'prop-types';
 import './modal.css';
 
 const Modal = ({ closeModal, image }) => {
-  // componentDidMount() {
-  // window.addEventListener('keydown', this.closeModalHandler);
-  // document.body.style.overflow = 'hidden';
-  // }
-  // componentWillUnmount() {
-  //   window.removeEventListener('keydown', this.closeModalHandler);
-  //   document.body.style.overflow = 'visible';
-  // }
-  const closeModalHandler = evt => {
-    if (evt.code === 'Escape') {
-      closeModal();
-    }
-    if (evt.target === evt.currentTarget) {
-      closeModal();
-    }
-  };
+  // const closeModalHandler = evt => {
+  //   if (evt.code === 'Escape') {
+  //     closeModal();
+  //   }
+  //   if (evt.target === evt.currentTarget) {
+  //     closeModal();
+  //   }
+  // };
+
+  const closeModalHandler = useCallback(
+    evt => {
+      if (evt.code === 'Escape') {
+        closeModal();
+      }
+      if (evt.target === evt.currentTarget) {
+        closeModal();
+      }
+    },
+    [closeModal]
+  );
+
   useEffect(() => {
     window.addEventListener('keydown', closeModalHandler);
     document.body.style.overflow = 'hidden';
