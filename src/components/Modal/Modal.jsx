@@ -1,39 +1,45 @@
-import React, { Component } from 'react';
+import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import './modal.css';
 
-export default class Modal extends Component {
-  componentDidMount() {
-    window.addEventListener('keydown', this.closeModalHandler);
-    document.body.style.overflow = 'hidden';
-  }
-  componentWillUnmount() {
-    window.removeEventListener('keydown', this.closeModalHandler);
-    document.body.style.overflow = 'visible';
-  }
-
-  closeModalHandler = evt => {
+const Modal = ({ closeModal, image }) => {
+  // componentDidMount() {
+  // window.addEventListener('keydown', this.closeModalHandler);
+  // document.body.style.overflow = 'hidden';
+  // }
+  // componentWillUnmount() {
+  //   window.removeEventListener('keydown', this.closeModalHandler);
+  //   document.body.style.overflow = 'visible';
+  // }
+  const closeModalHandler = evt => {
     if (evt.code === 'Escape') {
-      this.props.closeModal();
+      closeModal();
     }
     if (evt.target === evt.currentTarget) {
-      this.props.closeModal();
+      closeModal();
     }
   };
+  useEffect(() => {
+    window.addEventListener('keydown', closeModalHandler);
+    document.body.style.overflow = 'hidden';
+    return () => {
+      window.removeEventListener('keydown', closeModalHandler);
+      document.body.style.overflow = 'visible';
+    };
+  }, [closeModalHandler]);
 
-  render() {
-    const { image } = this.props;
-    return (
-      <div className="overlay" onClick={this.closeModalHandler}>
-        <div className="modal">
-          <img src={image} alt="" />
-        </div>
+  return (
+    <div className="overlay" onClick={closeModalHandler}>
+      <div className="modal">
+        <img src={image} alt="" />
       </div>
-    );
-  }
-}
+    </div>
+  );
+};
 
 Modal.propTypes = {
   image: PropTypes.string.isRequired,
   closeModal: PropTypes.func.isRequired,
 };
+
+export default Modal;
