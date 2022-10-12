@@ -6,12 +6,7 @@ export default async function getImages(query, page) {
     const response = await axios.get(
       `?q=${query}&page=${page}&key=${API_KEY}&image_type=photo&orientation=horizontal&per_page=12`
     );
-    if (!response.ok) {
-      return response.data;
-    }
-    return Promise.reject(
-      new Error('Что-то пошло не так ,:( , перезагрузите страничку')
-    );
+    return response.data;
   } catch (error) {
     console.log(error);
     return error;

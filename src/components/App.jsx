@@ -8,15 +8,6 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 export const App = () => {
-  // state = {
-  //   serchReqest: '',
-  //   status: 'idle',
-  //   imagesList: [],
-  //   page: 1,
-  //   error: null,
-  //   totalHits: null,
-  // };
-
   const [serchReqest, setSerchReqest] = useState('');
   const [status, setStatus] = useState('idle');
   const [imagesList, setImagesList] = useState([]);
@@ -62,22 +53,64 @@ export const App = () => {
   //     }
   //   }
   // }
+  const fetchData = async () => {
+    return await getImages(serchReqest, page);
+  };
 
-  useEffect(() => {}, []);
+  useEffect(() => {
+    if (status === 'idle') {
+      return;
+    }
+
+    fetchData()
+      .then(images => {
+        if (images.hits.length === 0) {
+          setStatus('empty');
+        } else {
+          setImagesList(images.hits);
+          setStatus('completed');
+          setTotalHits(images.totalHits);
+        }
+      })
+      .catch(error => {
+        setError(error);
+        setStatus('rejected');
+        console.log('у вас Ошибка => ', error);
+      });
+  }, [serchReqest]);
+
+  useEffect(() => {
+    if (status === 'idle') {
+      return;
+    }
+
+    if (page !== 1) {
+      fetchData()
+        .then(images => {
+          setImagesList(prevImages => [...prevImages, ...images.hits]);
+          setStatus('completed');
+        })
+        .catch(error => {
+          setError(error);
+          setStatus('rejected');
+          console.log('у вас Ошибка => ', error);
+        });
+    }
+  }, [page]);
 
   const onSubmit = req => {
     if (req === serchReqest) {
       return toast.error('Enter new request ^_^');
     }
-    // this.setState({ serchReqest: req, page: 1, imagesList: [] });
     setSerchReqest(req);
     setPage(1);
     setImagesList([]);
+    setStatus('pending');
   };
 
   const loadMoreBtnHandler = () => {
-    // this.setState(prState => ({ page: prState.page + 1 }));
     setPage(prState => prState + 1);
+    setStatus('pending');
   };
 
   if (totalHits === imagesList.length) {
@@ -97,6 +130,11 @@ export const App = () => {
       {status === 'empty' && (
         <h1 className="temporaty-heading">
           No results by request "{serchReqest}" 😢
+        </h1>
+      )}
+      {status === 'error' && (
+        <h1 className="temporaty-heading">
+          Reload the page ^_^ Error: {error}
         </h1>
       )}
 
