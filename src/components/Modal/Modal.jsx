@@ -3,15 +3,6 @@ import PropTypes from 'prop-types';
 import './modal.css';
 
 const Modal = ({ closeModal, image }) => {
-  // const closeModalHandler = evt => {
-  //   if (evt.code === 'Escape') {
-  //     closeModal();
-  //   }
-  //   if (evt.target === evt.currentTarget) {
-  //     closeModal();
-  //   }
-  // };
-
   const closeModalHandler = useCallback(
     evt => {
       if (evt.code === 'Escape') {

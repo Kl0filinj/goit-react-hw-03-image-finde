@@ -58,19 +58,19 @@ export const App = () => {
     if (status === 'idle') {
       return;
     }
-    const fetchData = async () => {
-      return await getImages(serchReqest, page);
-    };
+    // const fetchData = async () => {
+    //   return await ;
+    // };
     if (page === 1) {
-      fetchData()
+      getImages(serchReqest, page)
         .then(images => {
           if (images.hits.length === 0) {
             setStatus('empty');
-          } else {
-            setImagesList(images.hits);
-            setStatus('completed');
-            setTotalHits(images.totalHits);
+            return;
           }
+          setImagesList(images.hits);
+          setStatus('completed');
+          setTotalHits(images.totalHits);
         })
         .catch(error => {
           setError(error);
