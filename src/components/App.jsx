@@ -15,91 +15,27 @@ export const App = () => {
   const [error, setError] = useState(null);
   const [totalHits, setTotalHits] = useState(null);
 
-  // async componentDidUpdate(prevProps, prevState) {
-  //   if (prevState.serchReqest !== this.state.serchReqest) {
-  //     this.setState({ status: 'pending' });
-
-  //     try {
-  //       const images = await getImages(this.state.serchReqest, this.state.page);
-  //       if (images.hits.length === 0) {
-  //         this.setState({
-  //           status: 'empty',
-  //         });
-  //       } else {
-  //         this.setState({
-  //           imagesList: images.hits,
-  //           status: 'completed',
-  //           totalHits: images.totalHits,
-  //         });
-  //       }
-  //     } catch (error) {
-  //       this.setState({ error, status: 'rejected' });
-  //       console.log('у вас Ошибка => ', error);
-  //     }
-  //   }
-  //   if (prevState.page !== this.state.page && this.state.page !== 1) {
-  //     this.setState({ status: 'pending' });
-
-  //     try {
-  //       const images = await getImages(this.state.serchReqest, this.state.page);
-
-  //       this.setState(prState => ({
-  //         imagesList: [...prState.imagesList, ...images.hits],
-  //         status: 'completed',
-  //       }));
-  //     } catch (error) {
-  //       console.log('у вас Ошибка => ', error);
-  //       this.setState({ error, status: 'rejected' });
-  //     }
-  //   }
-  // }
-
   useEffect(() => {
-    if (status === 'idle') {
+    if (!serchReqest) {
       return;
     }
-    // const fetchData = async () => {
-    //   return await ;
-    // };
-    if (page === 1) {
-      getImages(serchReqest, page)
-        .then(images => {
-          if (images.hits.length === 0) {
-            setStatus('empty');
-            return;
-          }
-          setImagesList(images.hits);
-          setStatus('completed');
-          setTotalHits(images.totalHits);
-        })
-        .catch(error => {
-          setError(error);
-          setStatus('rejected');
-          console.log('у вас Ошибка => ', error);
-        });
-    }
-  }, [serchReqest, page, status]);
-
-  useEffect(() => {
-    if (status === 'idle') {
-      return;
-    }
-    const fetchData = async () => {
-      return await getImages(serchReqest, page);
-    };
-    if (page !== 1) {
-      fetchData()
-        .then(images => {
-          setImagesList(prevImages => [...prevImages, ...images.hits]);
-          setStatus('completed');
-        })
-        .catch(error => {
-          setError(error);
-          setStatus('rejected');
-          console.log('у вас Ошибка => ', error);
-        });
-    }
-  }, [page, serchReqest, status]);
+    setStatus('pending');
+    getImages(serchReqest, page)
+      .then(images => {
+        if (images.hits.length === 0) {
+          setStatus('empty');
+          return;
+        }
+        setImagesList(prevImages => [...prevImages, ...images.hits]);
+        setStatus('completed');
+        setTotalHits(images.totalHits);
+      })
+      .catch(error => {
+        setError(error);
+        setStatus('rejected');
+        console.log('у вас Ошибка => ', error);
+      });
+  }, [serchReqest, page]);
 
   const onSubmit = req => {
     if (req === serchReqest) {
@@ -108,12 +44,10 @@ export const App = () => {
     setSerchReqest(req);
     setPage(1);
     setImagesList([]);
-    setStatus('pending');
   };
 
   const loadMoreBtnHandler = () => {
     setPage(prState => prState + 1);
-    setStatus('pending');
   };
 
   if (totalHits === imagesList.length) {
@@ -140,7 +74,7 @@ export const App = () => {
 
       {status === 'pending' && <Loader />}
 
-      {imagesList.length > 0 &&
+      {imagesList.length !== 0 &&
         totalHits !== imagesList.length &&
         status !== 'pending' && (
           <LoadMoreBtn onClickHandler={loadMoreBtnHandler} />
